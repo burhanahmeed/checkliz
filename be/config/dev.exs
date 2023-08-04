@@ -2,10 +2,10 @@ import Config
 
 # Configure your database
 config :checkliz, Checkliz.Repo,
-  username: "root",
-  password: "",
-  hostname: "localhost",
-  database: "checkliz_dev",
+  username: {:system, "DB_USERNAME", "root"},
+  password: {:system, "DB_PWD", ""},
+  hostname: {:system, "DB_HOSTNAME", "localhost"},
+  database: {:system, "DB_NAME"},
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
