@@ -6,7 +6,7 @@ defmodule ChecklizWeb.RoomController do
   def create(conn, %{"room" => room_params}) do
     changeset = Room.changeset(%Room{}, room_params)
 
-    case ChecklizWeb.Room.create!(changeset) do
+    case Room.create(changeset) do
       {:ok, room} ->
         conn
         |> put_status(:created)

@@ -1,5 +1,6 @@
 defmodule ChecklizWeb.Room do
   use Ecto.Schema
+
   import Ecto.Changeset
 
   schema "rooms" do
