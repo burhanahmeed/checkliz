@@ -31,7 +31,7 @@ defmodule ChecklizWeb.RoomController do
     end
   end
 
-  def update(conn, %{"id" => id} = _params) do
+  def update(conn, %{"id" => id, "room" => room_params}) do
     room = RoomContext.get_room!(id)
 
     case room do
