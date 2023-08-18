@@ -1,11 +1,13 @@
 import Config
 
+# Dotenv.load()
+
 # Configure your database
 config :checkliz, Checkliz.Repo,
-  username: {:system, "DB_USERNAME", "root"},
-  password: {:system, "DB_PWD", ""},
-  hostname: {:system, "DB_HOSTNAME", "localhost"},
-  database: {:system, "DB_NAME"},
+  username: System.get_env("DB_USERNAME") || "root",
+  password: System.get_env("DB_PWD") || "",
+  hostname: System.get_env("DB_HOSTNAME") || "localhost",
+  database: System.get_env("DB_NAME"),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -19,7 +21,7 @@ config :checkliz, Checkliz.Repo,
 config :checkliz, ChecklizWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {127, 0, 0, 1}, port: System.get_env("PORT")],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
