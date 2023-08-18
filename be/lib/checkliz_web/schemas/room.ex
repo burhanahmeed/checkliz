@@ -14,7 +14,7 @@ defmodule ChecklizWeb.Room do
 
   def changeset(room, attrs \\ %{}) do
     room
-    |> cast(attrs, [:name, :slug, :description])
+    |> cast(attrs, [:name, :slug, :description, :deleted_at])
     |> generate_slug()
     |> validate_required([:name, :slug])
   end
@@ -24,7 +24,7 @@ defmodule ChecklizWeb.Room do
       nil -> changeset
       name ->
         slug = name |> String.downcase() |> String.replace(~r/[^a-z0-9]/, "-")
-        put_change(changeset, :slug, slug)
+        put_change(changeset, :slug, "#{slug}-#{DateTime.to_unix(DateTime.utc_now())}")
     end
   end
 end
