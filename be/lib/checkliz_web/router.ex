@@ -24,7 +24,7 @@ defmodule ChecklizWeb.Router do
   scope "/api", ChecklizWeb do
     pipe_through :api
 
-    resources "/rooms", RoomController, only: [:create, :delete, :update]
+    resources "/rooms", RoomController, only: [:create, :delete, :update, :show]
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
