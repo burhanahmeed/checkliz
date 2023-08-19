@@ -11,4 +11,11 @@ defmodule ChecklizWeb.Content do
 
     timestamps()
   end
+
+  def changeset(content, attrs \\ %{}) do
+    content
+    |> cast(attrs, [:room_id, :parent_id, :type, :value, :meta, :deleted_at])
+    |> generate_slug()
+    |> validate_required([:room_id, :type])
+  end
 end
