@@ -12,7 +12,6 @@ defmodule ChecklizWeb.RoomController do
   }
 
   def index(conn, params) do
-    IO.inspect(params)
     per_page = String.to_integer(Map.get(params, "size", "10"))
     page = String.to_integer(Map.get(params, "page", "1"))
     search_term = String.trim(Map.get(params, "search", ""))
