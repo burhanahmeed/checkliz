@@ -11,6 +11,34 @@ defmodule ChecklizWeb.RoomController do
     }
   }
 
+  def index(conn, params) do
+    IO.inspect(params)
+    per_page = String.to_integer(Map.get(params, "size", "10"))
+    page = String.to_integer(Map.get(params, "page", "1"))
+    search_term = String.trim(Map.get(params, "search", ""))
+
+    rooms = RoomContext.get_all(search_term, page, per_page)
+    count = RoomContext.get_count_all(search_term)
+
+    conn
+    |> put_status(:ok)
+    |> json(%{
+      rooms: rooms |> Enum.map(fn room -> %{
+        id: room.id,
+        name: room.name,
+        description: room.description,
+        slug: room.slug,
+        inserted_at: room.inserted_at
+      } end),
+      meta: %{
+        total_count: Enum.at(count, 0),
+        per_page: per_page,
+        current_page: page,
+        search: search_term
+      }
+    })
+  end
+
   def show(conn, %{"id" => id}) do
     room = RoomContext.get_room(id)
     case room do
