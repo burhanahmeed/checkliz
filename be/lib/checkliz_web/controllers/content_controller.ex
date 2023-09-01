@@ -1,9 +1,9 @@
-defmodule Checkliz.ContentController do
+defmodule ChecklizWeb.ContentController do
   use ChecklizWeb, :controller
 
   alias ChecklizWeb.Content
   alias Checkliz.Repo
-  alias Checkliz.ContentContext
+  alias ChecklizWeb.ContentContext
 
   @not_found_message %{
     errors: %{
@@ -12,13 +12,16 @@ defmodule Checkliz.ContentController do
   }
 
   def get_room_content(conn, %{"room_id" => room_id}) do
-    case ContentContext.get_content_by_room_id(room_id) do
-      {:ok, contents} ->
+    contents = ContentContext.get_content_by_room_id(room_id)
+
+    case contents do
+      _ ->
         conn
         |> put_status(:ok)
         |> json(%{
           message: "Content for the room were gotten!",
           contents: contents |> Enum.map(fn con -> %{
+            id: con.id,
             room_id: con.room_id,
             parent_id: con.parent_id,
             type: con.type,
@@ -27,6 +30,15 @@ defmodule Checkliz.ContentController do
             inserted_at: con.inserted_at,
             updated_at: con.updated_at
           } end)
+        })
+
+      [] ->
+        conn
+        |> put_status(:not_found)  # or another appropriate status code
+        |> json(%{
+          errors: %{
+            message: "Content not found"
+          }
         })
     end
   end
@@ -51,6 +63,7 @@ defmodule Checkliz.ContentController do
         |> json(%{
           message: "Content has been created!",
           data: %{
+            id: content.id,
             room_id: content.room_id,
             type: content.type,
             value: content.value
@@ -74,11 +87,20 @@ defmodule Checkliz.ContentController do
         |> json(@not_found_message)
 
       content ->
-        case  do
+        case ContentContext.update_content(content, id) do
           {:ok, updated_content} ->
+            response = %{
+              message: "Room has been updated!",
+              data: %{
+                type: updated_content.type,
+                value: updated_content.value,
+                room_id: updated_content.room_id
+              }
+            }
+
             conn
-            |> put_status(:not_found)
-            |> json(@not_found_message)
+            |> put_status(:ok)
+            |> json(response)
 
           {:error, changeset} ->
             conn
@@ -88,7 +110,7 @@ defmodule Checkliz.ContentController do
     end
   end
 
-  def delete(conn) do
+  def delete(conn, %{"id" => id}) do
     content = ContentContext.get_content(id)
     case content do
       nil ->

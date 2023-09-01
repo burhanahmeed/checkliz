@@ -11,10 +11,10 @@ defmodule ChecklizWeb.ContentContext do
   def get_content_by_room_id(id) do
     query =
       from c in Content,
-      where: c.room_id = id,
+      where: c.room_id == ^id,
       order_by: [desc: c.id]
 
-    Repo.all(qeury)
+    Repo.all(query)
   end
 
   def get_content(id) do

@@ -1,6 +1,8 @@
 defmodule ChecklizWeb.Content do
   use Ecto.Schema
 
+  import Ecto.Changeset
+
   schema "contents" do
     field :room_id, :integer
     field :parent_id, :integer
@@ -15,7 +17,6 @@ defmodule ChecklizWeb.Content do
   def changeset(content, attrs \\ %{}) do
     content
     |> cast(attrs, [:room_id, :parent_id, :type, :value, :meta, :deleted_at])
-    |> generate_slug()
     |> validate_required([:room_id, :type])
   end
 end
